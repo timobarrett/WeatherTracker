@@ -1,0 +1,11 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+    <string name="app_name">WeatherTracker</string>
+    <string name="action_settings">Settings</string>
+    <string name="pref_units_label">Measurement Units</string>
+    <string name="pref_units_key" translatable="false">measurement_units</string>
+    <string name="pref_units_label_metric">Metric</string>
+    <string name="pref_units_label_imperial">Imperial</string>
+    <string name="pref_units_metric" transalatble="false">metric</string>
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+</resources>

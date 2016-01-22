@@ -1,0 +1,16 @@
+. Failure to load and run settings can be due to undefined values in strings.xml or badly formed xml in the layout.
+
+Implement an RTC alarm that will collect and store weather data.
+Define the UI - calendar view with data displayed when clickng a day
+Add a summary button for the month that will return - avg temp, bad weather days, avg humidity
+
+Have to add check to verify GPS is enabled.
+
+AndroidManifest.xml - needed to following to create the database.
+    <provider
+            android:authorities="com.labs.tim_barrett.weathertracker"
+            android:name=".data.WeatherProvider"
+            android:exported="false"
+            android:syncable="true"  />
+
+database tables populated, is there enough data?
