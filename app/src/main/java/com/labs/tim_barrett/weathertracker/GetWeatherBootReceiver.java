@@ -9,6 +9,13 @@ import android.content.Intent;
  */
 public class GetWeatherBootReceiver extends BroadcastReceiver {
     GetWeatherReceiver receiver = new GetWeatherReceiver();
+
+    /**
+     * onReceive
+     *      called when the device is booted
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent){
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")){
