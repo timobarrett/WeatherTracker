@@ -41,11 +41,13 @@
                 android:value="com.labs.tim_barrett.weathertracker.MainActivity" />
         </activity>
         <receiver android:name=".GetWeatherReceiver"></receiver>
-        <receiver android:name=".GetWeatherBootReceiver" android:enabled="true">
+        <receiver android:name=".GetWeatherBootReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
         <provider
             android:authorities="com.labs.tim_barrett.weathertracker"
             android:name=".data.WeatherProvider"

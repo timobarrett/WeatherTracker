@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
+import com.labs.tim_barrett.weathertracker.data.WeatherContract;
+
 import java.util.Calendar;
 
 /**
@@ -47,9 +49,11 @@ public class GetWeatherReceiver extends WakefulBroadcastReceiver {
      * @param context
      */
     public void scheduleWeather(Context context) {
+        Log.d(LOG_TAG,"In scheduleWeather");
         mActivity = (Activity)context;
         scheduleMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, GetWeatherReceiver.class);
+     //   Intent intent = new Intent(context, GetWeatherReceiver.class);
+        Intent intent = new Intent(context, GetWeatherService.class);
         alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();

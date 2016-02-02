@@ -41,19 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "InOnCreate savedInstanceState = " + savedInstanceState);
+        //the following getExtras would contain a value if called from boot_completed receiver
+        // Intent foo = getIntent();
+       // if (foo != null && foo.getExtras()== null){
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         verifyPermissions();
+        setupCalendar();
 
         CollectBroadcastReceiver broadRev = new CollectBroadcastReceiver(this);
         LocalBroadcastManager.getInstance(this).registerReceiver(broadRev,
                 new IntentFilter(Constants.BROADCAST_LOCATION_ACTION));
-        setupCalendar();
-        if (!mPermissionResponceRequested){
-            weather.scheduleWeather(this);
-        }
-
     }
 
     /**
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        Log.d(LOG_TAG,"In onOptionsItemSelected");
         int id = item.getItemId();
         if (id == R.id.action_settings){
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -96,14 +97,13 @@ public class MainActivity extends AppCompatActivity {
      * @param grantResults
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         Log.i(LOG_TAG, "onRequestPermissionResult");
         switch (requestCode) {
             case GPS_PERMISSION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(LOG_TAG, "Permission to GPS Granted");
                     mGpsPermission = true;
-                    weather.scheduleWeather(this);
 
                 } else {
                     Log.d(LOG_TAG, "Permission to GPS Denied");
@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, GPS_PERMISSION);
                 mPermissionResponceRequested = true;
-//            }
             }
             else{ mGpsPermission= true;}
         } else {
@@ -129,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
             if (result == PackageManager.PERMISSION_GRANTED) {
                 mGpsPermission = true;
             }
+        }
+        if(mGpsPermission) {
+            weather.scheduleWeather(this);
         }
 
     }
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         weatherCal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(CalendarView view, int year, int month, int monthDay) {
                 Log.d(LOG_TAG, "DATECHANGED" + weatherCal.getDate() + "STARTDATE " + startDate);
-                Calendar foo = new GregorianCalendar(year,month,monthDay);
+                Calendar foo = new GregorianCalendar(year, month, monthDay);
                 Log.d(LOG_TAG, "DATE = " + foo.getTimeInMillis());
                 performDateCheck(new GregorianCalendar(year, month, monthDay).getTimeInMillis());
             }
@@ -159,10 +161,10 @@ public class MainActivity extends AppCompatActivity {
      *      Information has been collected so broadcast for processing
      * @param cmpDate
      */
-    public void performDateCheck(Long cmpDate){
-        Log.d(LOG_TAG,"performDateCheck");
+    public void performDateCheck(Long cmpDate) {
+        Log.d(LOG_TAG, "performDateCheck");
         Intent intent = new Intent (this,DailyInfoActivity.class);
-        intent.putExtra("DATE",cmpDate);
+        intent.putExtra("DATE", cmpDate);
         startActivity(intent);
     }
 
