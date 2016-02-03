@@ -167,6 +167,7 @@ public class DailyInfoActivity extends AppCompatActivity {
         if (loc != null && loc.moveToFirst()){
             mLocName = loc.getString(COL_LOCATION_CITY);
         }
+        loc.close();
     }
 
     /**
