@@ -53,19 +53,19 @@ public class GetWeatherReceiver extends WakefulBroadcastReceiver {
         mActivity = (Activity)context;
         scheduleMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
      //   Intent intent = new Intent(context, GetWeatherReceiver.class);
-        Intent intent = new Intent(context, GetWeatherService.class);
+        Intent intent = new Intent(context, GetWeatherReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        // Set the alarm's trigger time to 5:00 a.m.
-        calendar.set(Calendar.HOUR_OF_DAY, 5);
+        // Set the alarm's trigger time to 4:00 a.m.
+        calendar.set(Calendar.HOUR_OF_DAY, 4);
         calendar.set(Calendar.MINUTE, 00);
 
-        // Set the alarm to fire at approximately 8:30 a.m., according to the device's
+        // Set the alarm to fire at approximately 4:00 a.m., according to the device's
         // clock, and to repeat once a day.
         scheduleMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+        calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
         // Enable {@code SampleBootReceiver} to automatically restart the alarm when the
         // device is rebooted.
@@ -75,5 +75,6 @@ public class GetWeatherReceiver extends WakefulBroadcastReceiver {
         pm.setComponentEnabledSetting(receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
+        Log.d(LOG_TAG,"Exiting - scheduleWeather");
     }
 }
