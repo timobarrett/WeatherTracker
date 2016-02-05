@@ -1,18 +1,13 @@
 package com.labs.tim_barrett.weathertracker;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -50,10 +45,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         verifyPermissions();
         setupCalendar();
-
-        CollectBroadcastReceiver broadRev = new CollectBroadcastReceiver(this);
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadRev,
-                new IntentFilter(Constants.BROADCAST_LOCATION_ACTION));
     }
 
     /**
@@ -129,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
                 mGpsPermission = true;
             }
         }
-        if(mGpsPermission) {
-            weather.scheduleWeather(this);
-        }
+//        if(mGpsPermission) {
+//            weather.scheduleWeather(this);
+//        }
 
     }
 
@@ -167,30 +158,5 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("DATE", cmpDate);
         startActivity(intent);
     }
-
-    /**
-     * broadcast receiver class
-     *      receives the weather data collected broadcast.
-     */
-    public class CollectBroadcastReceiver extends BroadcastReceiver {
-        protected final String LOG_TAG = CollectBroadcastReceiver.class.getSimpleName();
-
-        private Activity mActivity;
-        CollectBroadcastReceiver(Activity activity) {mActivity = activity;}
-
-        /**
-         * onReceive
-         * @param context
-         * @param intent
-         */
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(LOG_TAG, "Entering onReceive");
-
-            WeatherTask weather = new WeatherTask(mActivity);
-            weather.execute();
-        }
-    }
-
 
 }

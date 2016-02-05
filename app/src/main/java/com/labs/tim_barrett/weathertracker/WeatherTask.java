@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
@@ -28,7 +29,8 @@ import com.labs.tim_barrett.weathertracker.data.WeatherContract.WeatherEntry;
 /**
  * Created by tim_barrett on 1/19/2016.
  */
-public class WeatherTask extends AsyncTask<String,Void,String[]>{
+public class WeatherTask{
+//public class WeatherTask extends AsyncTask<String,Void,String[]>{
     protected final String LOG_TAG = WeatherTask.class.getSimpleName();
     protected String mCurrentCond;
     protected String mConditionDescript ;
@@ -45,21 +47,16 @@ public class WeatherTask extends AsyncTask<String,Void,String[]>{
     protected String mWeatherCity;
     protected Double mActualLat;
     protected Double mActualLon;
-    protected Activity mActivity;
+    //protected Activity mActivity;
+    protected Context mContext;
     private LocationManager mLocationMgr;
     private Double mLatitude = 0.0;
     private Double mLongitude = 0.0;
 
 
-    public WeatherTask(Activity activity){mActivity = activity;}
+    public WeatherTask(Context context){mContext = context;}
 
-    @Override
-    protected void onPostExecute(String[] strings) {
-        super.onPostExecute(strings);
-    }
-
-    @Override
-    protected String[] doInBackground(String... Params){
+    protected String[] processWeather(String... Params){
         BufferedReader reader = null;
         HttpURLConnection urlConnection = null;
         String forecastJsonStr = null;
@@ -70,16 +67,17 @@ public class WeatherTask extends AsyncTask<String,Void,String[]>{
         final String FORMAT_PARAM = "mode";
         final String UNITS_PARAM = "units";
         final String APPID_PARAM = "APPID";
-        final String APPID_VALUE = "GET ONE AT OPENWEATHERMAP.ORG";
+        final String APPID_VALUE = "Get yours at openweatherapi.org";
         Long locationId = 0L;
         String[] locationResult = {""};
+        Log.d(LOG_TAG,"In processWeather");
 
         getGpsLocation();
         if (mLongitude == 0.0 && mLatitude == (0.0)){
             mLongitude = -71.6253;
             mLatitude = 42.8614;
         }
-        String mCityName = Utility.getCityName(mActivity,mLatitude,mLongitude);
+        String mCityName = Utility.getCityName(mContext,mLatitude,mLongitude);
 
         Uri weatherUri = Uri.parse(FORECAST_BASE_URL)
                 .buildUpon()
@@ -210,7 +208,7 @@ public class WeatherTask extends AsyncTask<String,Void,String[]>{
         weatherValues.put(WeatherEntry.COLUMN_SHORT_DESC, mCurrentCond);
         weatherValues.put(WeatherEntry.COLUMN_WEATHER_ID, mWeatherId);
 
-        mActivity.getContentResolver().insert(WeatherEntry.CONTENT_URI, weatherValues);
+        mContext.getContentResolver().insert(WeatherEntry.CONTENT_URI, weatherValues);
     }
 
     /**
@@ -227,7 +225,7 @@ public class WeatherTask extends AsyncTask<String,Void,String[]>{
         Long locationId = 100L;
 
         // First, check if the location with this city name exists in the db
-        Cursor locationCursor = mActivity.getContentResolver().query(
+        Cursor locationCursor = mContext.getContentResolver().query(
                 WeatherContract.LocationEntry.CONTENT_URI,
                 new String[]{WeatherContract.LocationEntry._ID},
                 WeatherContract.LocationEntry.COLUMN_WEATHER_CITY + " = ?",
@@ -247,7 +245,7 @@ public class WeatherTask extends AsyncTask<String,Void,String[]>{
                 locationValues.put(WeatherContract.LocationEntry.COLUMN_WEATHER_COORD_LON, wlon);
 
                 // Finally, insert location data into the database.
-                Uri insertedUri = mActivity.getContentResolver().insert(
+                        Uri insertedUri = mContext.getContentResolver().insert(
                         WeatherContract.LocationEntry.CONTENT_URI,
                         locationValues
                 );
@@ -269,7 +267,7 @@ public class WeatherTask extends AsyncTask<String,Void,String[]>{
      */
     protected boolean isGpsEnabled() {
         Log.i(LOG_TAG, "IN isGpsDisabled");
-        LocationManager locMgr = (LocationManager) mActivity.getSystemService(mActivity.LOCATION_SERVICE);
+        LocationManager locMgr = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);
         return locMgr.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
@@ -279,7 +277,7 @@ public class WeatherTask extends AsyncTask<String,Void,String[]>{
      */
     private void getGpsLocation() {
         Log.d(LOG_TAG, "In getGpsLocation");
-        mLocationMgr = (LocationManager) mActivity.getSystemService(mActivity.LOCATION_SERVICE);
+        mLocationMgr = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);
         try {
             Location mLocation = mLocationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (null != mLocation) {

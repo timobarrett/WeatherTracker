@@ -1,13 +1,9 @@
 package com.labs.tim_barrett.weathertracker;
 
-import android.app.Activity;
+
 import android.app.IntentService;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
@@ -29,10 +25,9 @@ public class GetWeatherService extends IntentService{
     protected void onHandleIntent(Intent intent){
         Log.d(LOG_TAG,"onHandleIntent");
         final Context context = getApplicationContext();
+        WeatherTask task = new WeatherTask(context);
+        task.processWeather();
 
-        Intent localIntent = new Intent(Constants.BROADCAST_LOCATION_ACTION);
-
-        LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent);
         GetWeatherReceiver.completeWakefulIntent(intent);
 
     }
