@@ -68,6 +68,10 @@ public class WeatherProvider extends ContentProvider{
                     "." + WeatherContract.LocationEntry.COLUMN_WEATHER_CITY + " = ? AND " +
                     WeatherContract.WeatherEntry.COLUMN_DATE + " = ? ";
 
+    private static final String sWithStartDateSelection =
+            WeatherContract.LocationEntry.TABLE_NAME +
+                    WeatherContract.WeatherEntry.COLUMN_DATE + " >= ? ";
+
     /**
      * gets a cursor of weather data by location
      * @param uri
@@ -99,6 +103,9 @@ public class WeatherProvider extends ContentProvider{
                 sortOrder
         );
     }
+
+
+
 
     /**
      * return a cursor of weather information by location and date
@@ -219,6 +226,7 @@ public class WeatherProvider extends ContentProvider{
                         null,
                         sortOrder
                 );
+                Log.d(LOG_TAG,"CASE WEATHER PROJECTION ="+projection+"select="+selection+"selectionArgs="+selectionArgs);
                 break;
             }
             // "location"

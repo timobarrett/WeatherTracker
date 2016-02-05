@@ -88,11 +88,16 @@ public class WeatherContract {
         // e.g "clear" vs "sky is clear".
         public static final String COLUMN_SHORT_DESC = "short_desc";
 
-        // Min and max temperatures for the day (stored as floats)
+        // temp when rest server queried  (stored as floats)
         public static final String COLUMN_TEMP = "temp";
+        //Min and Max Temp
+        public static final String COLUMN_MIN_TEMP = "min_temp";
+        public static final String COLUMN_MAX_TEMP = "max_temp";
 
         // Humidity is stored as a float representing percentage
         public static final String COLUMN_HUMIDITY = "humidity";
+
+        public static final String COLUMN_PRESSURE = "pressure";
 
         // Windspeed is stored as a float representing windspeed  mph
         public static final String COLUMN_WIND_SPEED = "wind";
